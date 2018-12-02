@@ -1,3 +1,5 @@
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
 import FeedStack from './src/FeedStack';
@@ -8,7 +10,7 @@ import ProfileStack from './src/ProfileStack';
 const BottomTab = createMaterialBottomTabNavigator(
   {
     FeedTab: FeedStack,
-    ListTab: ListStack,
+    ListTab: ListStack, 
     InboxTab: InboxStack,
     ProfileTab: ProfileStack
   },
@@ -17,7 +19,14 @@ const BottomTab = createMaterialBottomTabNavigator(
     shifting: true,
     activeColor: '#2e51a2',
     inactiveColor: '#c3c3c3',
+    barStyle: { backgroundColor: '#ffffff' }
   }
 );
 
-export default BottomTab;
+const AppContainer = createAppContainer(createSwitchNavigator(
+  {
+    App: BottomTab
+  }
+));
+
+export default AppContainer;

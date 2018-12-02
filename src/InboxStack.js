@@ -2,7 +2,7 @@ import React from 'react';
 
 import { createStackNavigator } from 'react-navigation';
 
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import InboxScreen from './screens/InboxScreen';
 
@@ -10,12 +10,16 @@ import InboxScreen from './screens/InboxScreen';
 const InboxStack = createStackNavigator(
   {
     Inbox: InboxScreen
-  }, {
-    navigationOptions: {
+  },
+  {
+    defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#2e51a2'
       },
       headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'normal'
+      }
     }
   }
 );
@@ -25,8 +29,7 @@ InboxStack.navigationOptions = {
   tabBarLabel: 'Inbox',
   tabBarIcon: ({ tintColor }) => (
     <Icon name="inbox" size={24} color={tintColor} />
-  ),
-  tabBarColor: '#fff'
+  )
 };
 
 export default InboxStack;

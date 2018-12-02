@@ -2,7 +2,7 @@ import React from 'react';
 
 import { createStackNavigator } from 'react-navigation';
 
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ListScreen from './screens/ListScreen';
 
@@ -12,11 +12,11 @@ const ListStack = createStackNavigator(
     List: ListScreen
   },
   {
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#3d3d3d'
-      },
-      headerTintColor: '#fff'
+    defaultNavigationOptions: {
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'normal'
+      }
     }
   }
 );
@@ -25,9 +25,8 @@ const ListStack = createStackNavigator(
 ListStack.navigationOptions = {
   tabBarLabel: 'List',
   tabBarIcon: ({ tintColor }) => (
-    <Icon name="list" size={24} color={tintColor} />
-  ),
-  tabBarColor: '#fff'
+    <Icon name="sort-variant" size={24} color={tintColor} />
+  )
 };
 
 export default ListStack;

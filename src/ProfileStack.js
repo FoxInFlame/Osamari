@@ -2,22 +2,36 @@ import React from 'react';
 
 import { createStackNavigator } from 'react-navigation';
 
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import ProfileScreen from './screens/ProfileScreen';
+import SettingScreen from './screens/SettingScreen';
 
 // Navigation stack for the Profile tab
-const ProfileStack = createStackNavigator({
-  Profile: ProfileScreen
-});
+const ProfileStack = createStackNavigator(
+  {
+    Profile: ProfileScreen,
+    Settings: SettingScreen
+  },
+  {
+    defaultNavigationOptions: {
+      headerTitleStyle: {
+        fontWeight: 'normal'
+      }
+    }
+  }
+);
 
 // Applied after definition to prevent it from affecting children
 ProfileStack.navigationOptions = {
   tabBarLabel: 'Profile',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="user" size={24} color={tintColor} />
-  ),
-  tabBarColor: '#fff'
+  tabBarIcon: ({ focused, tintColor }) => {
+    if (focused) {
+      return <Icon name="person" size={24} color={tintColor} />;
+    } else {
+      return <Icon name="person-outline" size={24} color={tintColor} />;
+    }
+  }
 };
 
 export default ProfileStack;
