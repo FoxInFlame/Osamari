@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import ListScreen from './screens/ListScreen';
+import ListScreen from './List/ListScreen';
 
 // Navigation stack for the Profile tab
 const ListStack = createStackNavigator(
@@ -17,16 +17,14 @@ const ListStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'normal'
       }
+    },
+    navigationOptions: {
+      tabBarLabel: 'List',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="sort-variant" size={24} color={tintColor} />
+      )
     }
   }
 );
-
-// Applied after definition to prevent it from affecting children
-ListStack.navigationOptions = {
-  tabBarLabel: 'List',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="sort-variant" size={24} color={tintColor} />
-  )
-};
 
 export default ListStack;

@@ -17,20 +17,18 @@ const FeedStack = createStackNavigator(
         color: '#00e',
         fontWeight: 'normal'
       }
+    },
+    navigationOptions: {
+      tabBarLabel: 'Feed',
+      tabBarIcon: ({ focused, tintColor }) => {
+        if (focused) {
+          return <Icon name="home" size={24} color={tintColor} />;
+        } else {
+          return <Icon name="home-outline" size={24} color={tintColor} />;
+        }
+      }
     }
   }
 );
-
-// Applied after definition to prevent it from affecting children
-FeedStack.navigationOptions = {
-  tabBarLabel: 'Feed',
-  tabBarIcon: ({ focused, tintColor }) => {
-    if (focused) {
-      return <Icon name="home" size={24} color={tintColor} />;
-    } else {
-      return <Icon name="home-outline" size={24} color={tintColor} />;
-    }
-  }
-};
 
 export default FeedStack;

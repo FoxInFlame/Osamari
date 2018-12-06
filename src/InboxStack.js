@@ -20,16 +20,14 @@ const InboxStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'normal'
       }
+    },
+    navigationOptions: {
+      tabBarLabel: 'Inbox',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="inbox" size={24} color={tintColor} />
+      )
     }
   }
 );
-
-// Applied after definition to prevent it from affecting children
-InboxStack.navigationOptions = {
-  tabBarLabel: 'Inbox',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="inbox" size={24} color={tintColor} />
-  )
-};
 
 export default InboxStack;

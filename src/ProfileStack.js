@@ -18,20 +18,18 @@ const ProfileStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'normal'
       }
+    },
+    navigationOptions: {
+      tabBarLabel: 'Profile',
+      tabBarIcon: ({ focused, tintColor }) => {
+        if (focused) {
+          return <Icon name="person" size={24} color={tintColor} />;
+        } else {
+          return <Icon name="person-outline" size={24} color={tintColor} />;
+        }
+      }
     }
   }
 );
-
-// Applied after definition to prevent it from affecting children
-ProfileStack.navigationOptions = {
-  tabBarLabel: 'Profile',
-  tabBarIcon: ({ focused, tintColor }) => {
-    if (focused) {
-      return <Icon name="person" size={24} color={tintColor} />;
-    } else {
-      return <Icon name="person-outline" size={24} color={tintColor} />;
-    }
-  }
-};
 
 export default ProfileStack;
