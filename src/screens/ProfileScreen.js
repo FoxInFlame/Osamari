@@ -23,17 +23,6 @@ export default class ProfileScreen extends React.Component {
   render() {
     return (
       <View>
-        <View style={styles.row}>
-          <Chip
-            icon="play-arrow"
-            onPress={this.goSettings}
-            mode="outlined"
-            onClose={() => console.log('close 1')}
-            style={styles.chip}
-          >
-            Watching
-          </Chip>
-        </View>
       </View>
     );
   }
