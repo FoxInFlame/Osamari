@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Header } from 'react-navigation';
+import { Header, HeaderTitle } from 'react-navigation';
 
 import {
   View,
@@ -11,30 +11,38 @@ import {
   Easing
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { connect } from 'react-redux';
 
 import { TextInput, Chip } from 'react-native-paper';
+import { changeTitle } from '../actions';
 
-import HeaderIcon from './HeaderIcon';
+import merge from 'lodash/merge';
 
-export default class ListScreen extends React.Component {
+class MyTitle extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return <HeaderTitle {...this.props}>{this.props.headerTitle ? this.props.headerTitle : 'Anime List'}</HeaderTitle>;
+  }
+}
+
+const mapStateToTitleProps = state => ({
+  headerTitle: state.headerTitle
+});
+
+const MyConnectedTitle = connect(mapStateToTitleProps)(MyTitle);
+
+export class ListHeader extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      expanded: false,
       expandAnimation: new Animated.Value(76) // Original value
     };
 
     this._toggleExpand = this._toggleExpand.bind(this);
-
-    // Directly modify headerRight, because if it is done in navigationOptions, it gets complicated
-    // when we want to call _toggleExpand().
-    this.props.scene.descriptor.options.headerRight = (
-      <HeaderIcon onPress={this._toggleExpand}>
-        <Icon name="filter-list" size={24} color={'#ffffff'} />
-      </HeaderIcon>
-    );
   }
 
   /**
@@ -50,16 +58,31 @@ export default class ListScreen extends React.Component {
   }
 
   /**
-   * Toggles the expanded state of the filter section.
+   * Trigger a toggle of the filters when the Redux expanded state changes.
+   * 
+   * @param {*} nextProps 
+   */
+  componentWillReceiveProps(nextProps) {
+    // Only toggleExpand if the boolean value is set to something different
+    if (nextProps.filterExpanded !== this.props.filterExpanded) {
+      this._toggleExpand();
+    }
+  }
+
+  /**
+   * Toggles the expanded state visual and text of the filter section.
    */
   _toggleExpand() {
-    let initialValue = this.state.expanded ? this.state.maxHeight + 76 : 76,
-      finalValue = this.state.expanded ? 76 : this.state.maxHeight + 76;
+    let initialValue = this.props.filterExpanded
+        ? this.state.maxHeight + 76
+        : 76,
+      finalValue = this.props.filterExpanded ? 76 : this.state.maxHeight + 76;
 
-    // Always use setState in places other than the constructor
-    this.setState({
-      expanded: !this.state.expanded
-    });
+    // Trigger Redux Action changeTitle()
+    this.props.changeTitle(
+      // If currently expanded, next would be closed.
+      this.props.filterExpanded ? 'Anime List' : 'Filter Results'
+    );
 
     // This is directly modifying the Animated value, and not the state value
     this.state.expandAnimation.setValue(initialValue);
@@ -67,21 +90,39 @@ export default class ListScreen extends React.Component {
     // Start the animation!
     Animated.timing(this.state.expandAnimation, {
       toValue: finalValue,
-      duration: 200,
+      duration: 500,
       easing: Easing.bezier(0.4, 0.0, 0.2, 1)
     }).start();
   }
 
   render() {
+    // Create merged properties to put in Header. The custom part should be before this.props.
+    // In order to put a component as a title, it had to be done here: doing it in navigationOptions
+    // was not possible, and using just redux based text in navigationOptions led to huge lag.
+    let merged = merge(
+      {},
+      {
+        scene: {
+          descriptor: {
+            options: {
+              headerTitle: MyConnectedTitle
+            }
+          }
+        }
+      },
+      this.props
+    );
+
     return (
       // Use Animated.View when we have a dynamically changing animated style value
       <Animated.View
         style={{
           height: this.state.expandAnimation,
-          width: Dimensions.get('window').width
+          width: Dimensions.get('window').width,
+          overflow: 'hidden'
         }}
       >
-        <Header {...this.props} />
+        <Header {...merged} />
         <View
           onLayout={this._setMaxHeight.bind(this)}
           style={{
@@ -123,6 +164,19 @@ export default class ListScreen extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  filterExpanded: state.filterExpanded
+});
+
+const mapDispatchToProps = {
+  changeTitle
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListHeader);
 
 class Filters extends React.Component {
   constructor(props) {

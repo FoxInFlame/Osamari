@@ -8,27 +8,53 @@ import {
   Dimensions
 } from 'react-native';
 
-import { Chip } from 'react-native-paper';
+import { connect } from 'react-redux';
 
-import ToolbarDropdown from './../ToolbarDropdown';
-import ListHeader from './../components/ListHeader';
+import HeaderIcon from './components/HeaderIcon';
+import FilterIcon from './components/FilterIcon';
+import ListHeader from './components/ListHeader';
+import { toggleFilters } from './actions';
 
 const BACKGROUND_COLOR = '#3d3d3d';
 
-export default class ListScreen extends React.Component {
+export class ListScreen extends React.Component {
   constructor(props) {
+    /*
+    Because this component is connected to the store, this.props also contains:
+    - toggleFilters() => dispatches List/TOGGLE_FILTERS
+    - headerTitle => contains current title
+
+    */
     super(props);
   }
 
+  /**
+   * Register the toggleFilter() Redux function in the navigation params so that it can be called
+   * from within the static navigationOptions headerRight.
+   */
+  componentDidMount() {
+    this.props.navigation.setParams({
+      toggleFilters: this.props.toggleFilters
+    });
+  }
+
+
   static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
     return {
-      title: 'Watch List',
+      // Title can become 'Filter Results' in ListHeader
+      title: 'Anime List',
       headerStyle: {
         // Set backgroundColor here instead of using the `backgroundColor` prop in ListHeader
         // because the Header component ignores all its `style` props
         backgroundColor: BACKGROUND_COLOR,
         elevation: 0
       },
+      headerRight: (
+        <HeaderIcon onPress={params.toggleFilters}>
+          <FilterIcon />
+        </HeaderIcon>
+      ),
       header: props => (
         <ListHeader backgroundColor={BACKGROUND_COLOR} {...props} />
       )
@@ -57,15 +83,7 @@ export default class ListScreen extends React.Component {
             overflow: 'hidden'
           }}
         >
-          <View
-            style={{
-              backgroundColor: '#ffffff',
-              elevation: 2
-            }}
-          >
-            <Text>Notice goes here.</Text>
-            <Text>Hi there.</Text>
-          </View>
+          
           {/* <View>
             <ToolbarDropdown labels={['test', 'testab']} />
           </View> */}
@@ -82,3 +100,17 @@ export default class ListScreen extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  filterExpanded: state.filterExpanded,
+  headerTitle: state.headerTitle
+});
+
+const mapDispatchToProps = {
+  toggleFilters
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListScreen);

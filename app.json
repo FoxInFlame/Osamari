@@ -3,7 +3,7 @@
     "name": "Osamari",
     "description": "This project is really great.",
     "slug": "Osamari",
-    "privacy": "public",
+    "privacy": "unlisted",
     "sdkVersion": "31.0.0",
     "platforms": ["ios", "android"],
     "version": "0.0.2",
@@ -21,6 +21,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "tk.zucchinasu.osamari",
       "supportsTablet": true
     },
     "android": {
