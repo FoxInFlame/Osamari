@@ -2,34 +2,34 @@ import React from 'react';
 
 import { Header, HeaderTitle } from 'react-navigation';
 
-import {
-  View,
-  ScrollView,
-  Dimensions,
-  Text,
-  Animated,
-  Easing
-} from 'react-native';
+import { View, Dimensions, Animated, Easing } from 'react-native';
 
 import { connect } from 'react-redux';
 
-import { TextInput, Chip } from 'react-native-paper';
-import { changeTitle } from '../actions';
+import { TextInput } from 'react-native-paper';
 
 import merge from 'lodash/merge';
 
-class MyTitle extends React.Component {
+import ChipList from './ChipList';
+import { changeTitle } from '../actions';
+
+class MyTitle extends React.PureComponent {
   constructor(props) {
     super(props);
   }
 
   render() {
-    return <HeaderTitle {...this.props}>{this.props.headerTitle ? this.props.headerTitle : 'Anime List'}</HeaderTitle>;
+    // Use internal component that react-navigation uses to render header.
+    return (
+      <HeaderTitle {...this.props}>
+        {this.props.headerTitle ? this.props.headerTitle : 'Anime List'}
+      </HeaderTitle>
+    );
   }
 }
 
 const mapStateToTitleProps = state => ({
-  headerTitle: state.headerTitle
+  headerTitle: state.listScreen.headerTitle
 });
 
 const MyConnectedTitle = connect(mapStateToTitleProps)(MyTitle);
@@ -59,8 +59,8 @@ export class ListHeader extends React.Component {
 
   /**
    * Trigger a toggle of the filters when the Redux expanded state changes.
-   * 
-   * @param {*} nextProps 
+   *
+   * @param {*} nextProps
    */
   componentWillReceiveProps(nextProps) {
     // Only toggleExpand if the boolean value is set to something different
@@ -90,7 +90,7 @@ export class ListHeader extends React.Component {
     // Start the animation!
     Animated.timing(this.state.expandAnimation, {
       toValue: finalValue,
-      duration: 500,
+      duration: 400,
       easing: Easing.bezier(0.4, 0.0, 0.2, 1)
     }).start();
   }
@@ -154,7 +154,7 @@ export class ListHeader extends React.Component {
               borderBottomWidth: 1
             }}
           />
-          <Filters
+          <ChipList
             style={{
               marginHorizontal: 16
             }}
@@ -166,7 +166,7 @@ export class ListHeader extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  filterExpanded: state.filterExpanded
+  filterExpanded: state.listScreen.filterExpanded
 });
 
 const mapDispatchToProps = {
@@ -177,103 +177,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ListHeader);
-
-class Filters extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <View {...this.props}>
-        <Text
-          style={{
-            color: '#c4c4c4',
-            marginTop: 8
-          }}
-        >
-          Filter
-        </Text>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          overScrollMode={'never'}
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap'
-          }}
-          contentContainerStyle={{
-            paddingVertical: 6,
-            alignItems: 'center'
-          }}
-        >
-          <Chip
-            icon="play-arrow"
-            onPress={() => console.log('Pressed')}
-            mode="outlined"
-            theme={{
-              colors: {
-                text: '#c4c4c4'
-              }
-            }}
-            style={{ marginHorizontal: 2, backgroundColor: '#5f5f5f' }}
-          >
-            Watching
-          </Chip>
-          <Chip
-            icon="check"
-            onPress={() => console.log('Pressed')}
-            mode="outlined"
-            theme={{
-              colors: {
-                text: '#c4c4c4'
-              }
-            }}
-            style={{ marginHorizontal: 2, backgroundColor: '#5f5f5f' }}
-          >
-            Completed
-          </Chip>
-          <Chip
-            icon="pause"
-            onPress={() => console.log('Pressed')}
-            mode="outlined"
-            theme={{
-              colors: {
-                text: '#c4c4c4'
-              }
-            }}
-            style={{ marginHorizontal: 2, backgroundColor: '#5f5f5f' }}
-          >
-            On Hold
-          </Chip>
-          <Chip
-            icon="call-missed"
-            onPress={() => console.log('Pressed')}
-            mode="outlined"
-            theme={{
-              colors: {
-                text: '#c4c4c4'
-              }
-            }}
-            style={{ marginHorizontal: 2, backgroundColor: '#5f5f5f' }}
-          >
-            Dropped
-          </Chip>
-          <Chip
-            icon="low-priority"
-            onPress={() => console.log('Pressed')}
-            mode="outlined"
-            theme={{
-              colors: {
-                text: '#c4c4c4'
-              }
-            }}
-            style={{ marginHorizontal: 2, backgroundColor: '#5f5f5f' }}
-          >
-            Plan to Watch
-          </Chip>
-        </ScrollView>
-      </View>
-    );
-  }
-}

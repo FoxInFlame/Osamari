@@ -1,18 +1,15 @@
 import React from 'react';
 
-import {
-  ScrollView,
-  View,
-  RefreshControl,
-  Text,
-  Dimensions
-} from 'react-native';
+import { ScrollView, View, RefreshControl } from 'react-native';
 
 import { connect } from 'react-redux';
 
 import HeaderIcon from './components/HeaderIcon';
 import FilterIcon from './components/FilterIcon';
 import ListHeader from './components/ListHeader';
+import BackdropContent from './components/BackdropContent';
+import Overlay from './components/Overlay';
+
 import { toggleFilters } from './actions';
 
 const BACKGROUND_COLOR = '#3d3d3d';
@@ -38,7 +35,6 @@ export class ListScreen extends React.Component {
     });
   }
 
-
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -63,47 +59,29 @@ export class ListScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <View
-          style={{
-            backgroundColor: BACKGROUND_COLOR,
-            position: 'absolute',
-            height: 16,
-            width: Dimensions.get('window').width
-          }}
-        />
-        <View
-          style={{
-            flex: 1,
-            elevation: 4,
-            backgroundColor: '#ffffff',
-            marginTop: 4,
-            borderTopRightRadius: 12,
-            borderTopLeftRadius: 12,
-            overflow: 'hidden'
-          }}
-        >
-          
-          {/* <View>
+      <BackdropContent backgroundColor={BACKGROUND_COLOR}>
+        {/* <View>
             <ToolbarDropdown labels={['test', 'testab']} />
           </View> */}
-          <ScrollView
-            refreshControl={<RefreshControl refreshing={false} />}
-            style={{ flex: 1 }}
-          >
-            <View style={{ backgroundColor: 'white', height: 500 }} />
-            <View style={{ backgroundColor: 'yellow', height: 500 }} />
-            <View style={{ backgroundColor: 'red', height: 500 }} />
-          </ScrollView>
-        </View>
-      </View>
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={false} />}
+          style={{ flex: 1 }}
+        >
+          <View style={{ backgroundColor: 'white', height: 500 }} />
+          <View style={{ backgroundColor: 'yellow', height: 500 }} />
+          <View style={{ backgroundColor: 'red', height: 500 }} />
+        </ScrollView>
+
+
+        <Overlay onPress={this.props.toggleFilters} visible={this.props.filterExpanded}/>
+      </BackdropContent>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  filterExpanded: state.filterExpanded,
-  headerTitle: state.headerTitle
+  filterExpanded: state.listScreen.filterExpanded,
+  headerTitle: state.listScreen.headerTitle
 });
 
 const mapDispatchToProps = {
